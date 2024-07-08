@@ -6,7 +6,9 @@ var score
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	new_game()
+	# new_game() is COMMENTED because we don't want the game to start automatically
+	# new_game()
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -18,11 +20,21 @@ func game_over():
 	$ScoreTimer.stop()
 	$MobTimer.stop()
 	
+	$HUD.show_game_over()
+	
 func new_game():
+	# HUD score setup
 	score = 0
+	$HUD.update_score(score)
+	$HUD.show_message("Get Ready")
+
+	# Player position setup
 	$Player.start($StartPosition.position)
 	$StartTimer.start()
-
+	
+	# Calling "mobs" group defined in Node/Groups tab on mob.tscn root node
+	# calls the named function on every node in a group - in this case we are telling every mob to delete itself.
+	get_tree().call_group("mobs", "queue_free")
 
 func _on_start_timer_timeout():
 	$MobTimer.start()
